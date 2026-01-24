@@ -12,40 +12,69 @@
 #
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, <see https://www.gnu.org/licenses/>.
+
 import logging
 from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
-"""Set logging config for all loggers"""
+
 def set_log_config(filename):
+    """
+    Set logging config for all loggers
+    :param filename: path to log file
+    """
     logging.basicConfig(filename=filename, encoding='utf-8', level=logging.DEBUG)
 
-"""Set up the output file names"""
-def setup_output(output_path,filename):
-    fic_name = Path(filename).stem
+
+def setup_output(output_path, filename):
+    """
+    Set up the filenames for the split / modified output.
+
+    :param output_path: the path to the directory where the files should be saved
+    :param filename: name of the original file (may include path)
+    :returns: names for work_file (main content); tags_file (any tags removed from the work);
+      notes_file (any author / chapter notes removed from the work)
+    """
+    work_name = Path(filename).stem
+    suffix = Path(filename).suffix
     time = Path(output_path).stem
-    work_file = Path(output_path, fic_name + '_' + time + '.html')
-    tags_file = Path(output_path, fic_name + '_tags_' + time + '.html')
-    notes_file = Path(output_path, fic_name + '_notes_' + time + '.html')
+    work_file = Path(output_path, work_name + '_' + time + suffix)
+    tags_file = Path(output_path, work_name + '_tags_' + time + suffix)
+    notes_file = Path(output_path, work_name + '_notes_' + time + suffix)
 
     return work_file, tags_file, notes_file
 
-"""Format a message"""
+
 def format_message(action, message):
-    message = ('Action %s: %s' % action % message)
+    """
+    Format a message for logging / reporting
+    :param action: action being performed when message generated
+    :param message: text of message
+    :returns: formatted message"""
+    message = 'Action {}: {}'.format(action, message)
+
     return message
 
 
-"""Add an entry to the report file"""
-def add_entry(file_path, value):
+def append_to_rfile(file_path, value):
+    """
+    Append an entry to file in regular (non-binary) mode.
+    :param file_path: path to target file
+    :param value: string to write to file
+    """
     logger.debug("Attempting to write to file")
     with open(file_path, 'a') as write_file:
         write_file.write(value)
         write_file.write('\n')
 
-"""Add an entry to the specified file"""
-def write_to_html(file_path, value):
+
+def write_to_bfile(file_path, value):
+    """
+    write an entry to file in binary mode.
+    :param file_path: path to target file
+    :param value: string to write to file
+    """
     logger.debug("Attempting to write to file")
     with open(file_path, 'wb') as write_file:
         write_file.write(value)
