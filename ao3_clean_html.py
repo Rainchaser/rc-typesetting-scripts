@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 
 def move_tags(html_root, tags_root):
     # get the initial message of "originally posted on..."
-    element = new_html_element(Tag.DIV)
+    element = new_html_element(Tag.DIV, None)
     element.append(html_root.xpath(make_xpath([XpathPart.ALL_FROM_ROOT,
                                                Tag.PARAGRAPH + XpathPart.item_with_val(XpathPart.CLASS.name,
                                                                                        Attr.MESSAGE)
@@ -38,6 +38,7 @@ def move_tags(html_root, tags_root):
     body_element = tags_root.find(Tag.BODY.get_find_str())
     body_element.append(element)
     body_element.append(tags[0])
+
 
 def move_notes(html_root, notes_root):
     body_element = notes_root.find(Tag.BODY.get_find_str())
@@ -56,16 +57,16 @@ def move_notes(html_root, notes_root):
 
     # move summary and work notes
     body_element.append(pre_div.xpath(make_xpath([XpathPart.ALL_FROM_ROOT,
-                                                Tag.DIV + XpathPart.item_with_val(XpathPart.CLASS.name, Attr.META)
+                                                  Tag.DIV + XpathPart.item_with_val(XpathPart.CLASS.name, Attr.META)
                                                   ]))[0])
 
     # move chapter start / end notes
     group1 = make_xpath([XpathPart.ALL_FROM_ROOT,
-                                    Tag.DIV + XpathPart.item_with_val(XpathPart.ID.name, Attr.CHAPTERS),
-                                    Tag.DIV + XpathPart.item_with_val(XpathPart.CLASS.name, Attr.META_GRP)])
+                         Tag.DIV + XpathPart.item_with_val(XpathPart.ID.name, Attr.CHAPTERS),
+                         Tag.DIV + XpathPart.item_with_val(XpathPart.CLASS.name, Attr.META_GRP)])
     group2 = make_xpath([XpathPart.ALL_FROM_ROOT,
-                                    Tag.DIV + XpathPart.item_with_val(XpathPart.ID.name, Attr.CHAPTERS),
-                                    Tag.DIV + XpathPart.item_with_val(XpathPart.CLASS.name, Attr.META)])
+                         Tag.DIV + XpathPart.item_with_val(XpathPart.ID.name, Attr.CHAPTERS),
+                         Tag.DIV + XpathPart.item_with_val(XpathPart.CLASS.name, Attr.META)])
     meta_groups = html_root.xpath(group1 + XpathPart.GROUP_SEPARATOR + group2)
     for group in meta_groups:
         if group.get(Attr.CLASS) == Attr.META_GRP:
@@ -73,8 +74,7 @@ def move_notes(html_root, notes_root):
             headings = group.xpath(make_xpath([XpathPart.ALL_FROM_ROOT,
                                                Tag.H2 + XpathPart.item_with_val(XpathPart.CLASS.name, Attr.HEADING)]))
             if len(headings) > 0:
-                element = new_html_element(Tag.H2)
-                element.text = headings[0].text
+                element = new_html_element(Tag.H2, headings[0].text)
                 text_div.addprevious(element)
             body_element.append(group)
         else:
@@ -86,18 +86,19 @@ def move_notes(html_root, notes_root):
     for note in afterword:
         body_element.append(note)
 
-'''
-Converts an AO3 HTML file to a cleaned up format for Scribus, and moves tags and notes to additional files for 
-optional inclusion.
-Arguments are passed in explicitly, so that main can be called from other scripts
-'''
+
 def main(html_file, work_file, tags_file, notes_file, dash_style_opt):
+    """
+    Converts an AO3 HTML file to a cleaned up format for Scribus, and moves tags and notes to additional files for
+    optional inclusion.
+    Arguments are passed in explicitly, so that main can be called from other scripts
+    """
     logger.debug(file_utils.format_message("start main", ("file to process is " + html_file)))
     html_root = html_utils.get_parsed_root(html_file)
 
     # remove meta title and style
-    html_utils.del_tag_tree(html_root, make_xpath([XpathPart.SINGLE_REL_PATH, Tag.HEAD, Tag.TITLE]))
-    html_utils.del_tag_tree(html_root, make_xpath([XpathPart.SINGLE_REL_PATH, Tag.HEAD, Tag.STYLE]))
+    html_utils.deltree_all_of_tag(html_root, make_xpath([XpathPart.SINGLE_REL_PATH, Tag.HEAD, Tag.TITLE]))
+    html_utils.deltree_all_of_tag(html_root, make_xpath([XpathPart.SINGLE_REL_PATH, Tag.HEAD, Tag.STYLE]))
 
     # remove html links
     html_utils.drop_all_of_tag(html_root, Tag.ANCHOR.get_find_str())
@@ -119,10 +120,10 @@ def main(html_file, work_file, tags_file, notes_file, dash_style_opt):
     move_notes(html_root, notes_root)
 
     # remove remaining TOC title heading if present (single-chapter fics only)
-    html_utils.del_tag_tree(html_root, make_xpath([XpathPart.ALL_REL_TO_NODE,
-                                                   Tag.ANY + XpathPart.item_with_val(XpathPart.CLASS.name,
-                                                                                     'toc-heading')
-                                                   ]))
+    html_utils.deltree_all_of_tag(html_root, make_xpath([XpathPart.ALL_REL_TO_NODE,
+                                                         Tag.ANY + XpathPart.item_with_val(XpathPart.CLASS.name,
+                                                                                           'toc-heading')
+                                                         ]))
 
     #TODO: Clean up spaces (duplicate spaces, nbsp?, extra spaces around punctuation)
 
@@ -146,15 +147,19 @@ def main(html_file, work_file, tags_file, notes_file, dash_style_opt):
     # main body: convert tree to string and write to output file
     file_utils.write_to_bfile(work_file, html_utils.get_html_string(html_root))
 
+
 if __name__ == '__main__':
 
     # get any passed arguments
     if len(sys.argv) > 2:
         html_filename = sys.argv[1]
         output_dir = sys.argv[2]
-        dash_style = sys.argv[3]
+        if len(sys.argv) > 3:
+            dash_style = sys.argv[3]
+        else:
+            dash_style = None
     else:
-        print("usage: python clean_ao3_html.py <html_filename> <output_directory> [<dash_style>] where dash_style is "
+        print("usage: python ao3_clean_html.py <html_filename> <output_directory> [<dash_style>] where dash_style is "
               "one of 'UK' or 'US'. If not specified then dashes will not be updated.")
         sys.exit(1)
 

@@ -16,7 +16,7 @@
 The utility modules for the typesetting scripts
 """
 
-__all__ = ['file_utils', 'html_utils', 'number_utils', 'Tag', 'Punctuation', 'XpathPart', 'Attr']
+__all__ = ['file_utils', 'html_utils', 'number_utils', 'Tag', 'Punctuation', 'XpathPart', 'Attr', 'get_arg_parser']
 
 import argparse
 from enum import Enum, StrEnum
@@ -24,7 +24,7 @@ from enum import Enum, StrEnum
 from utils.string_utils import text_replace
 
 
-def get_arg_parser(opts_list: list):
+def get_arg_parser(opts_list: dict):
     parser = argparse.ArgumentParser()
 
     for opt in opts_list:
@@ -59,6 +59,7 @@ An enum class containing values for specific html tags, plus a method to retriev
 findall to retrieve any occurrence of that tag.
 '''
 class Tag(StrEnum):
+    DROP = 'drop' # set by script to id items to delete
     ANY = '*'
     HTML = 'html'
     BODY = 'body'

@@ -53,9 +53,10 @@ def new_html_base(content_type):
         ),
     )
 
-def new_html_element(tag):
+def new_html_element(tag, text):
     element = HtmlElement()
     element.tag = tag
+    element.text = text
     return element
 
 def drop_all_of_tag(html_element: html.HtmlElement, tag_string):
@@ -63,9 +64,9 @@ def drop_all_of_tag(html_element: html.HtmlElement, tag_string):
     for item in html_tags:
         item.drop_tag()
 
-def del_tag_tree(html_element: html.HtmlElement, tag_string):
-    tag = html_element.find(tag_string)
-    if tag is not None:
+def deltree_all_of_tag(html_element: html.HtmlElement, tag_string):
+    html_tags = html_element.findall(tag_string)
+    for tag in html_tags:
         tag.drop_tree()
 
 def update_tag_type(html_element: html.HtmlElement, search_str, tag_type):
@@ -85,7 +86,7 @@ def convert_punctuation(html_element: html.HtmlElement, punct: Punctuation):
 
 def get_chapter_titles(html_root: HtmlElement):
     return html_root.xpath(make_xpath([XpathPart.ALL_FROM_ROOT,
-                                       Tag.DIV + XpathPart.item_with_val(XpathPart.CLASS.name, Attr.CHAPTERS),
+                                       Tag.DIV + XpathPart.item_with_val(XpathPart.ID.name, Attr.CHAPTERS),
                                        Tag.H2]))
 
 def make_xpath(arg_list):

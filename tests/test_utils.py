@@ -14,8 +14,13 @@
 #  along with this program.  If not, <see https://www.gnu.org/licenses/>.
 
 import unittest
-from utils import Punctuation, Tag, XpathPart, Attr
+from utils import Punctuation, Tag, XpathPart, Attr, get_arg_parser
 
+OPTIONS_DICT = {
+    '-n' : ('--numbers', str, 'text', 'test help string split '
+                                      'over two lines'),
+    '-o' : ('--offset', int, 0, 'test int help string')
+    }
 
 class TestUtils(unittest.TestCase):
     def test_punctuation_enum(self):
@@ -46,6 +51,14 @@ class TestUtils(unittest.TestCase):
 
         value = XpathPart.item_with_val('bad_val', Attr.META.value)
         self.assertEqual(value, '[@*="meta"]')
+
+    def test_get_arg_parser(self):
+        parser = get_arg_parser(OPTIONS_DICT)
+        self.assertIsNotNone(parser)
+        options = vars(parser.parse_args())
+        self.assertEqual(2,len(options))
+        self.assertIn('offset', options)
+        self.assertIn('numbers', options)
 
 
 if __name__ == '__main__':

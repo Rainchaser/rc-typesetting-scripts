@@ -73,16 +73,9 @@ Equal sized numbers are added together
 A bar called a vinculum placed over a number multiplies its value by 1,000 (not relevant for chapters!)
 
     IV = 4 (5 - 1)
-    IIII = 4 (4x1)
     VI = 6 (5 + 1)
     XIV = 15 (10 + (5 - 1))
-    XIX = 19 (10 + (10 - 1))
-    XL = 40 (50 - 10)
-    XLIX = 49 (50 + (10 - 1))
     XCIX = 99 ((100 - 10) + (10 - 1))
-    CCCC = 400
-    DC = 600 (500 + 100)
-    MDCCCCLXXXV = 1985 (1000 + 500 + 4x100 + 50 + 3x10 + 5)
     MCMLXXXV = 1985 (1000 + (1000-100) + 50 + 3x10 + 5)
     '''
 
