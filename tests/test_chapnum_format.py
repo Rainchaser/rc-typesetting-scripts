@@ -19,7 +19,7 @@ from utils import Tag
 
 test_fix_values = [
     ('Chapter','upper', 'CHAPTER '),
-    ('chapter   ', 'title', 'Chapter'),
+    ('chapter   ', 'title', 'Chapter '),
     ('ChApTeR', '', 'ChApTeR '),
     (None, 'upper', ''),
     ('', '', '')
@@ -51,7 +51,8 @@ test_cval_values = [
 ]
 
 test_ctext_values = [
-    ('title', 'Chapter 1: I made a mistake', ['Chapter ', '1', ': '], 'I made a mistake'),
+    ('title', 'Chapter 1: I made a mistake', ['', '1', ' '], 'I made a mistake'),
+    ('title', 'Chapter 1: I made a mistake', ['# ', '1', ' # '], '# I made a mistake #'),
     ('combined', "Chapter 4: I've got a cat & a dog", ['Chapter ', 'IV', ': '], "Chapter IV: I've got a cat & a dog"),
     ('other', 'Chapter 5: Getting on like a house on fire', [' * ', 'five', ' * '], '* five *'),
     ('other', 'Chapter 6: Peace at last', ['', 'five', ''], 'five')
@@ -64,11 +65,11 @@ class TestChapNumFormat(unittest.TestCase):
             self.assertEqual(exp_out, actual_output)
 
     def test_set_ornament(self):
-        for test_text, tag_val, exp_use in test_fix_values:
+        for test_text, tag_val, exp_use in test_ornament_values:
             actual_use, html_tag = ao3_chapnum_format.set_ornament(test_text, tag_val)
             self.assertEqual(exp_use, actual_use)
             if exp_use:
-                self.assertEqual(html_tag.tag, Tag.H1)
+                self.assertEqual(html_tag.tag, tag_val)
                 self.assertEqual(html_tag.text, test_text)
             else:
                 self.assertIsNone(html_tag)

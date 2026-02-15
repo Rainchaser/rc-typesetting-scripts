@@ -15,42 +15,43 @@
 
 import unittest
 
-from utils import html_utils, Tag, XpathPart
+from utils import html_utils, Tag, XpathPart, Attr
+
 
 class TestHtmlUtils(unittest.TestCase):
     def test_make_xpath(self):
-        path_list = [XpathPart.ALL_REL_TO_NODE.value, Tag.BOLD.value]
+        path_list = [XpathPart.ALL_REL_TO_NODE, Tag.BOLD]
         value = html_utils.make_xpath(path_list)
         self.assertEqual('.//b', value)
 
-        path_list = [XpathPart.SINGLE_REL_PATH.value, Tag.HEAD.value, Tag.TITLE.value]
+        path_list = [XpathPart.SINGLE_REL_PATH, Tag.HEAD, Tag.TITLE]
         value = html_utils.make_xpath(path_list)
         self.assertEqual('./head/title', value)
 
-        path_list = [XpathPart.SINGLE_PATH_FROM_ROOT.value, Tag.HEAD.value, Tag.TITLE.value]
+        path_list = [XpathPart.SINGLE_PATH_FROM_ROOT, Tag.HEAD, Tag.TITLE]
         value = html_utils.make_xpath(path_list)
         self.assertEqual('/head/title', value)
 
-        path_list = [XpathPart.ALL_FROM_ROOT.value,
-                     Tag.DIV.value + XpathPart.cls_with_val('meta'),
-                     Tag.DIV.value + XpathPart.cls_with_val('byline')]
+        path_list = [XpathPart.ALL_FROM_ROOT,
+                     Tag.DIV + XpathPart.item_with_val('CLASS', Attr.META),
+                     Tag.DIV + XpathPart.item_with_val('CLASS', Attr.BYLINE)]
         value = html_utils.make_xpath(path_list)
         self.assertEqual('//div[@class="meta"]/div[@class="byline"]', value)
 
-        path_list = [XpathPart.ALL_FROM_ROOT.value,
-                     Tag.PARAGRAPH.value + XpathPart.cls_with_val('message')]
+        path_list = [XpathPart.ALL_FROM_ROOT,
+                     Tag.PARAGRAPH + XpathPart.item_with_val('CLASS', Attr.MESSAGE)]
         value = html_utils.make_xpath(path_list)
         self.assertEqual('//p[@class="message"]', value)
 
-        path_list = [XpathPart.ALL_FROM_ROOT.value,
-                     Tag.DIV.value + XpathPart.id_with_val('chapters'),
-                     Tag.DIV.value + XpathPart.cls_with_val('meta group')]
+        path_list = [XpathPart.ALL_FROM_ROOT,
+                     Tag.DIV + XpathPart.item_with_val('ID', Attr.CHAPTERS),
+                     Tag.DIV + XpathPart.item_with_val('CLASS', Attr.META_GRP)]
         group1 = html_utils.make_xpath(path_list)
-        path_list = [XpathPart.ALL_FROM_ROOT.value,
-                     Tag.DIV.value + XpathPart.id_with_val('chapters'),
-                     Tag.DIV.value + XpathPart.cls_with_val('meta')]
+        path_list = [XpathPart.ALL_FROM_ROOT,
+                     Tag.DIV + XpathPart.item_with_val('ID', Attr.CHAPTERS),
+                     Tag.DIV + XpathPart.item_with_val('CLASS', Attr.META)]
         group2 = html_utils.make_xpath(path_list)
-        value = group1 + XpathPart.GROUP_SEPARATOR.value + group2
+        value = group1 + XpathPart.GROUP_SEPARATOR + group2
         self.assertEqual('//div[@id="chapters"]/div[@class="meta group"]|//div[@id="chapters"]/div[@class="meta"]',
                          value)
 

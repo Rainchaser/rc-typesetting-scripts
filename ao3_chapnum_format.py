@@ -101,7 +101,7 @@ def get_chapter_text(text, chapter_text, pre_val_suf):
     match text:
         case 'title':
             # include prefix and suffix on either side of title in case people want to use them for decorating the title
-            text_val = pre_val_suf[0] + get_title_from_chapter(chapter_text) + ' ' + pre_val_suf[2]
+            text_val = pre_val_suf[0] + get_title_from_chapter(chapter_text) + pre_val_suf[2]
         case 'combined':
             text_val = ''.join(pre_val_suf) + get_title_from_chapter(chapter_text)
         # for 'chapter' and 'split', include suffix in case people want to use them for decoration
