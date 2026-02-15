@@ -14,6 +14,7 @@
 #  along with this program.  If not, <see https://www.gnu.org/licenses/>.
 
 import logging
+import re
 
 logger = logging.getLogger(__name__)
 
@@ -31,3 +32,16 @@ def text_replace(text, old_text, new_text):
     if text is not None:
         text = text.replace(old_text, new_text)
     return text
+
+def get_title_from_chapter(input_str):
+    """Extracts the title from a string, if present. Only implemented for strings in the format <chapter number>
+     or <chapter number>[<space>]<suffix><space><title> (where the space after chapter number is optional)."""
+    split_str = re.split('[^A-z0-9 ] ', input_str.strip())
+    out_str = ''
+    if len(split_str) > 2:
+        remove_str = split_str[0]
+        # need to also remove the original split character
+        out_str = re.sub(f'{remove_str}[^A-z0-9 ] ', '', input_str)
+    elif len(split_str) == 2:
+        out_str = split_str[1]
+    return str.strip(out_str)
