@@ -40,9 +40,9 @@ OPTIONS_DICT = {
                                   'Optional, defaults to none.'),
     '-b' : ('--between', str, '', 'Ornament to use between the chapter and title. Ignored if text format not split, '
                                     'not affected by case. Optional, defaults to none.'),
-    '-t' : ('--text', str, 'split', 'text format - one of "chapter" (just the numbering), "title" (just the title), '
+    '-t' : ('--text', str, 'combined', 'text format - one of "chapter" (just the numbering), "title" (just the title), '
                                   '"combined" (chapter then title on same line), "split" (title on separate line '
-                                  'beneath chapter). Optional, defaults to split.')
+                                  'beneath chapter). Optional, defaults to combined.')
 }
 
 def set_fixes(value, case):
@@ -120,6 +120,9 @@ def process_split_option(text_opt, chapter, use_between, between_tag):
                 new_tag = deepcopy(between_tag)
                 chapter.addnext(new_tag)
                 new_tag.addnext(title_tag)
+            else:
+                chapter.addnext(title_tag)
+
     return last_tag
 
 
