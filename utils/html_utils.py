@@ -33,6 +33,10 @@ def get_parsed_root(html_file):
     """
     parsed_html = html.parse(html_file)
     logger.debug(file_utils.format_message("parse html", "file parsed successfully"))
+    for elem in parsed_html.getroot().iter():
+        tag = elem.tag
+        if elem.getparent() is not None:
+            parent_tag = elem.getparent().tag
     return parsed_html.getroot()
 
 def get_html_string(html_tree):
@@ -86,7 +90,7 @@ def convert_punctuation(html_element: html.HtmlElement, punct: Punctuation):
 
 def get_chapter_titles(html_root: HtmlElement):
     return html_root.xpath(make_xpath([XpathPart.ALL_FROM_ROOT,
-                                       Tag.DIV + XpathPart.item_with_val(XpathPart.ID.name, Attr.CHAPTERS),
+                                       Tag.BODY,
                                        Tag.H2]))
 
 def make_xpath(arg_list):

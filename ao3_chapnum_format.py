@@ -152,6 +152,8 @@ def main(options, work_file):
     chapter_tags = html_utils.get_chapter_titles(html_root)
 
     for chapter in chapter_tags:
+        if not str.strip(chapter.text).startswith('Chapter'):
+            continue
         # skip chapters until it's time to start numbering
         if chapters_skip > 0:
             chapters_skip -= 1
