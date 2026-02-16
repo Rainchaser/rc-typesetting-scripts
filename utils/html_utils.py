@@ -33,10 +33,6 @@ def get_parsed_root(html_file):
     """
     parsed_html = html.parse(html_file)
     logger.debug(file_utils.format_message("parse html", "file parsed successfully"))
-    for elem in parsed_html.getroot().iter():
-        tag = elem.tag
-        if elem.getparent() is not None:
-            parent_tag = elem.getparent().tag
     return parsed_html.getroot()
 
 def get_html_string(html_tree):
