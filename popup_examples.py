@@ -13,10 +13,6 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, <see https://www.gnu.org/licenses/>.
 
-import tkinter as tk
-from tkinter import ttk
-from tkinter.constants import LEFT
-
 from utils.popup_utils import WrappedInput, WrappedMessage
 
 my_value = WrappedInput("MessageBox Title - Input",
