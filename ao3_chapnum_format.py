@@ -80,33 +80,30 @@ def get_chapter_val(option_set, value):
     # if using title only, don't need to calculate the chapter value
     if option_set['text'] == 'title':
         return chap_text
-    match option_set['numbers']:
-        case 'roman':
-            chap_text = number_utils.convert_to_roman(value)
-            # roman text should only be upper or lower case - if lower isn't selected, use upper
-            if option_set['case'] == 'lower':
-                chap_text = apply_case(chap_text, 'lower')
-            else:
-                chap_text = apply_case(chap_text, 'upper')
-        case 'arabic':
-            chap_text = str(value)
-        # default option is text, e.g. 'one'
-        case _:
-            chap_text = apply_case(number_utils.convert_to_english(value), option_set['case'])
+    if option_set['numbers'] == 'roman':
+        chap_text = number_utils.convert_to_roman(value)
+        # roman text should only be upper or lower case - if lower isn't selected, use upper
+        if option_set['case'] == 'lower':
+            chap_text = apply_case(chap_text, 'lower')
+        else:
+            chap_text = apply_case(chap_text, 'upper')
+    elif option_set['numbers'] == 'arabic':
+        chap_text = str(value)
+    # default option is text, e.g. 'one'
+    else:
+        chap_text = apply_case(number_utils.convert_to_english(value), option_set['case'])
 
     return chap_text
 
 def get_chapter_text(text, chapter_text, pre_val_suf):
-    text_val = ''
-    match text:
-        case 'title':
-            # include prefix and suffix on either side of title in case people want to use them for decorating the title
-            text_val = pre_val_suf[0] + get_title_from_chapter(chapter_text) + pre_val_suf[2]
-        case 'combined':
-            text_val = ''.join(pre_val_suf) + get_title_from_chapter(chapter_text)
-        # for 'chapter' and 'split', include suffix in case people want to use them for decoration
-        case _:
-            text_val = ''.join(pre_val_suf)
+    if text == 'title':
+        # include prefix and suffix on either side of title in case people want to use them for decorating the title
+        text_val = pre_val_suf[0] + get_title_from_chapter(chapter_text) + pre_val_suf[2]
+    elif text == 'combined':
+        text_val = ''.join(pre_val_suf) + get_title_from_chapter(chapter_text)
+    # for 'chapter' and 'split', include suffix in case people want to use them for decoration
+    else:
+        text_val = ''.join(pre_val_suf)
     return str.strip(text_val)
 
 def process_split_option(text_opt, chapter, use_between, between_tag):
