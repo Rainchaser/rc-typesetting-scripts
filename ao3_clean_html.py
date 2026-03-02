@@ -19,11 +19,15 @@ A script to clean up HTML files downloaded from AO3, primarily for use with Scri
 import logging
 import sys
 
-from utils import file_utils, html_utils, Tag, Punctuation, XpathPart, Attr
+from utils import file_utils, html_utils, Tag, Punctuation, XpathPart, Attr, get_arg_parser
 from utils.html_utils import make_xpath, new_html_element
 
 logger = logging.getLogger(__name__)
 
+OPTIONS_DICT = {
+    '-d' : ('--dash_style', str, '', ['','UK', 'US'], 'Dash style is one of "UK" or "US". If left blank then '
+                                                         'dash style will not be updated.', 'dropdown')
+}
 
 def move_tags(html_root, tags_root):
     # get the initial message of "originally posted on..."
@@ -150,24 +154,20 @@ def main(html_file, work_file, tags_file, notes_file, dash_style_opt):
 
 if __name__ == '__main__':
 
-    # get any passed arguments
-    if len(sys.argv) > 2:
-        html_filename = sys.argv[1]
-        output_dir = sys.argv[2]
-        if len(sys.argv) > 3:
-            dash_style = sys.argv[3]
-        else:
-            dash_style = None
-    else:
-        print("usage: python ao3_clean_html.py <html_filename> <output_directory> [<dash_style>] where dash_style is "
-              "one of 'UK' or 'US'. If not specified then dashes will not be updated.")
-        sys.exit(1)
+    arg_parser = get_arg_parser(OPTIONS_DICT)
+    arg_parser.add_argument('filename', help='Filepath for the file to be processed. Required.')
+    arg_parser.add_argument('output_dir', help='Folder to save output files.')
+
+    # print the full help if no arguments passed
+    if len(sys.argv) == 1:
+        print('\033[31m Note:\033[0m use "-h" to get full usage information.')
+    opts = vars(arg_parser.parse_args())
 
     # set up the output folder and log file
-    folder = file_utils.setup_config(output_dir)
+    folder = file_utils.setup_config(opts['output_dir'])
 
     # set up filenames for the modified work, the tags, and any author / chapter notes
-    work_filename, tags_filename, notes_filename = file_utils.setup_ao3_output(folder, html_filename)
+    work_filename, tags_filename, notes_filename = file_utils.setup_ao3_output(folder, opts['filename'])
 
     # process the file - pass arguments to main so it can be called from anthology script
-    main(html_filename, work_filename, tags_filename, notes_filename, dash_style)
+    main(opts['filename'], work_filename, tags_filename, notes_filename, opts['dash_style'])

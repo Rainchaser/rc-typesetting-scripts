@@ -28,8 +28,9 @@ def get_arg_parser(opts_list: dict):
     parser = argparse.ArgumentParser()
 
     for opt in opts_list:
+        # ignore the final value - not used by the args parser
         parser.add_argument(opt, opts_list[opt][0], type=opts_list[opt][1],
-                            default=opts_list[opt][2], help=opts_list[opt][3])
+                            default=opts_list[opt][2], choices=opts_list[opt][3], help=opts_list[opt][4])
 
     return parser
 
