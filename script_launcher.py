@@ -53,6 +53,7 @@ def launch_chapnum():
         folder = file_utils.setup_config(opts['output_dir'])
         work_filename = file_utils.get_file_name(folder, opts['filename'])
         ao3_chapnum_format.main(opts, work_filename)
+        popup_utils.WrappedMessage('Script Finished', 'Chapter formatting script has finished.')
 
 
 def launch_clean():
@@ -65,6 +66,7 @@ def launch_clean():
         folder = file_utils.setup_config(opts['output_dir'])
         work_filename, tags_filename, notes_filename = file_utils.setup_ao3_output(folder, opts['filename'])
         ao3_clean_html.main(opts['filename'], work_filename, tags_filename, notes_filename, opts['dash_style'])
+        popup_utils.WrappedMessage('Script Finished', 'Cleanup script has finished.')
 
 
 if __name__ == '__main__':
