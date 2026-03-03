@@ -26,6 +26,7 @@ SCRIPT_LIST = {
 
 
 def check_opts_valid(options):
+    """Checks to make sure that values for the target filename and output directory have been added."""
     result = False
     if not options:
         popup_utils.show_error('Cancelled', 'Input cancelled, script not run.')
@@ -37,6 +38,7 @@ def check_opts_valid(options):
 
 
 def select_script(script_name):
+    """Launches target script depending on name given"""
     if script_name == CLEAN:
         launch_clean()
     elif script_name == CHAPNUM:
@@ -44,6 +46,7 @@ def select_script(script_name):
 
 
 def launch_chapnum():
+    """Launch the chapter formatting script"""
     # get options values from popup
     opts = popup_utils.ScriptPopup(title= 'AO3 ChapNum Format Script',
                                    script_desc="Format the chapter numbers / titles of a cleaned AO3 downloaded file.",
@@ -57,6 +60,7 @@ def launch_chapnum():
 
 
 def launch_clean():
+    """Launch the AO3 cleanup script"""
     # get options values from popup
     opts = popup_utils.ScriptPopup(title= 'AO3 Cleanup Script',
                                    script_desc="Clean up a file downloaded from AO3 ready for import.",
@@ -73,5 +77,4 @@ if __name__ == '__main__':
     get_value = popup_utils.RadioInput(title='Select Script',
                                      description="Choose the script that you want to run.",
                                      opts_list=SCRIPT_LIST)
-    script = get_value.get_result()
-    select_script(script)
+    select_script(get_value.get_result())

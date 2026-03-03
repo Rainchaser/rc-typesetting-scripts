@@ -138,4 +138,4 @@ class Punctuation(Enum):
         elif style_string == 'US':
             return cls.US_DASH
         else:
-            return Punctuation.NONE
+            return cls.NONE

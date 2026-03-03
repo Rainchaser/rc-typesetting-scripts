@@ -56,4 +56,4 @@ ttk.Separator(inner_frame, orient='horizontal').grid(column=0, row=5, sticky='WE
 ttk.Button(inner_frame, text='OK').grid(column=0, row=6, sticky='W')
 window.mainloop()
 
-# For an example of using the ScriptArgument and ScriptPopup classes, see the "script_launcher" python script.
+# For examples of using the RadioInput, ScriptArgument and ScriptPopup classes, see the "script_launcher" python script.
