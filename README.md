@@ -36,7 +36,23 @@ The simplest option is to download the entire repository via Code → Download z
 delete the files that you don't want to keep.
 
 Once downloaded, the scripts can be launched from the commandline via 
-`python <script name> <arguments>` from the directory containing the script that you wish to run.
+`python <script name> <arguments>` (or `py <script name> <arguments>` if using Windows) from the 
+directory containing the script that you wish to run.
+
+You can also run the script `script_launcher.py` to launch a set of popup prompts for selecting 
+a script and adding the appropriate arguments rather than needing to use the commandline.
+
+### Example popups
+The "popup_examples" file gives examples of how to use the popup_utils functions and classes to 
+create popups. The script_launcher file shows how to use the remaining methods (RadioInput, 
+ScriptArgument and ScriptPopup).
+
+Note that the popups can't currently be scrolled (where applicable) with a mouse wheel if the 
+mouse pointer is over the main body of the popup - scrolling *will* work if the pointer is over 
+the scrollbar, plus the usual up/down buttons or grabbing and pulling the scrollbar marker.
+
+Tabbing between inputs also works, however if the active item is off the bottom of the visible 
+window, it currently won't scroll down to make the active item visible.
 
 ### AO3 scripts
 These are intended to work with files downloaded from [AO3](https://archiveofourown.org/). The files must have been 
@@ -44,9 +60,10 @@ generated from the download option, rather than "view source" and then copy/past
 is different.
 
 #### ao3_clean_html
-This script takes two arguments:  
+This script takes three arguments:  
 * source file - path (local or absolute) to the html file that is to be processed  
 * output directory - the destination folder where processed files should be generated
+* dash style - the style (US or UK) to convert dashes to. Optional.
 
 #### ao3_chapnum_format
 This script edits the format of chapter headings in an html file that has been edited using the 
@@ -76,4 +93,4 @@ description of all the arguments. The argument flags all have a short and a long
     * (to set the prefix to "Chapter" and the suffix to ":")
 
 Some values may need to be wrapped in double-quotes (***not*** single quotes) to be passed as an 
-argument, e.g. --suffix="|"
+argument via the commandline, e.g. --suffix="|"

@@ -21,28 +21,33 @@ from copy import deepcopy
 
 logger = logging.getLogger(__name__)
 
-# short code: (long code, type, default, description)
+# short code: (long code, type, default, options, description, popup input (if using script launcher)
 OPTIONS_DICT = {
-    '-n' : ('--numbers', str, 'text', 'Number style - "roman" (e.g. "IV"), "arabic" (e.g. "32"), '
-                                        '"text" (e.g. "fourteen". Optional, defaults to text'),
-    '-p' : ('--prefix', str, '', 'String added before numbers, e.g. "Chap", "Ch". Some characters may need to be placed'
-                                 ' in double quotes in order to be accepted e.g. "|" Optional, defaults to none.'),
-    '-s' : ('--suffix', str, '', 'String to add after numbers - some characters may need to be placed in double quotes '
-                                 'in order to be accepted e.g. "|". Optional, defaults to none unless text'
-                                 ' format is combined then it defaults to ":". Cannot set empty if combined selected'),
-    '-o' : ('--offset', int, '0', 'Set positive to skip numbering the initial chapters - e.g. set to 1 to skip '
+    '-n' : ('--numbers', str, 'text', ['text', 'roman', 'arabic'], 'Number style - "roman" (e.g. "IV"), "arabic" (e.g. '
+                                                                   '"32"), "text" (e.g. "fourteen". Optional, defaults '
+                                                                   'to text', 'dropdown'),
+    '-p' : ('--prefix', str, '', None, 'String added before numbers, e.g. "Chap", "Ch". Some characters may need to be '
+                                       'placed in double quotes in order to be accepted e.g. "|" Optional, defaults to '
+                                       'none.', 'free'),
+    '-s' : ('--suffix', str, '', None, 'String to add after numbers - some characters may need to be placed in double '
+                                       'quotes in order to be accepted e.g. "|". Optional, defaults to none unless text'
+                                       ' format is combined then it defaults to ":". Cannot set empty if combined '
+                                       'selected', 'free'),
+    '-o' : ('--offset', int, '0', None, 'Set positive to skip numbering the initial chapters - e.g. set to 1 to skip '
                                     'prologue. Set negative to start numbering from a higher value, e.g. set to -4 to '
-                                    'number first chapter as 5. Optional, defaults to 0.'),
-    '-c' : ('--case', str, 'title', 'Case to use - upper, lower or title (first letters capitalised). Roman numerals '
-                                      'will be uppercase unless lowercase is selected. If an empty value is passed,'
-                                      '(e.g. -c "") then the case is left unaltered. Optional, defaults to title'),
-    '-a' : ('--after', str, '', 'Ornament to use after the chapter/title, not affected by case. '
-                                  'Optional, defaults to none.'),
-    '-b' : ('--between', str, '', 'Ornament to use between the chapter and title. Ignored if text format not split, '
-                                    'not affected by case. Optional, defaults to none.'),
-    '-t' : ('--text', str, 'combined', 'text format - one of "chapter" (just the numbering), "title" (just the title), '
-                                  '"combined" (chapter then title on same line), "split" (title on separate line '
-                                  'beneath chapter). Optional, defaults to combined.')
+                                    'number first chapter as 5. Optional, defaults to 0.', 'spin'),
+    '-c' : ('--case', str, 'title', ['upper', 'lower', 'title'],
+            'Case to use - upper, lower or title (first letters capitalised). Roman numerals will be uppercase unless '
+            'lowercase is selected. If an empty value is passed, (i.e. "" on commandline) then the case is left '
+            'unaltered. Optional, defaults to title', 'dropdown'),
+    '-a' : ('--after', str, '', None, 'Ornament to use after the chapter/title, not affected by case. '
+                                  'Optional, defaults to none.', 'free'),
+    '-b' : ('--between', str, '', None, 'Ornament to use between the chapter and title. Ignored if text format not '
+                                        'split, not affected by case. Optional, defaults to none.', 'free'),
+    '-t' : ('--text', str, 'combined', ['chapter', 'title', 'combined', 'split'],
+            'text format - one of "chapter" (just the numbering), "title" (just the title), "combined" (chapter then '
+            'title on same line), "split" (title on separate line beneath chapter). Optional, defaults to combined.',
+            'dropdown')
 }
 
 def set_fixes(value, case):
