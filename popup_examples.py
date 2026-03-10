@@ -17,6 +17,44 @@ from utils.popup_utils import TextInput, WrappedMessage
 import tkinter as tk
 from tkinter import ttk
 
+# Example simple dropdown popup - using grid method.
+# Sticky option is which side(s) of the grid cell an item should stick to (using compass directions)
+def dropdown_example(title_val, label_val, options_list):
+    # create the base window
+    root = tk.Tk()
+    root.title = title_val
+
+    # add a frame to let the popup match the base OS styling
+    frame = ttk.Frame(root)
+    frame.grid(column=0, row=0, padx=5, pady=5, sticky='NEWS')
+
+    # add the label - it isn't referenced by later code so no need to assign to a variable
+    ttk.Label(frame, text=label_val).grid(column=0, row=0, sticky='WE')
+
+    # add dropdown widget - setting it as readonly so have to assign to a variable.
+    dropdown_value = tk.StringVar(frame)
+    # set the initial value of the combobox - omit if the dropdown should start with no value set
+    dropdown_value.set(options_list[0])
+    box = ttk.Combobox(frame, textvariable=dropdown_value, values=options_list)
+    box.grid(column=0, row=1, sticky='WE')
+    box['state'] = 'readonly'
+
+    # add a separator and an OK button
+    ttk.Separator(frame, orient='horizontal').grid(column=0, row=2, sticky='WE', pady=5)
+    ttk.Button(frame, text='OK', command=root.destroy).grid(column=0, row=3, sticky='WE')
+
+    # display the window
+    root.mainloop()
+    # once the window is closed, return the selected value
+    return dropdown_value.get()
+
+# Example dropdown popup
+day_list = ('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun')
+text = dropdown_example('Test Dropdown Window', 'Select a day:', day_list)
+
+WrappedMessage("Response", "Answer: " + text)
+
+
 # Example input and message boxes with wrapped text.
 my_value = TextInput("Fixed Width Input",
                         "This message has a fixed width for wrapping which is the default of 300. If you pull "
@@ -53,7 +91,7 @@ ttk.Separator(inner_frame, orient='horizontal').grid(column=0, row=3, sticky='WE
 popup_utils.WrappedLabel(inner_frame, is_dynamic=True,
                          text=text_arg + text_arg + text_arg + text_arg + text_arg).grid(column=0, row=4, sticky='WE')
 ttk.Separator(inner_frame, orient='horizontal').grid(column=0, row=5, sticky='WE', pady=10)
-ttk.Button(inner_frame, text='OK').grid(column=0, row=6, sticky='W')
+ttk.Button(inner_frame, text='OK', command=window.destroy).grid(column=0, row=6, sticky='W')
 window.mainloop()
 
 # For examples of using the RadioInput, ScriptArgument and ScriptPopup classes, see the "script_launcher" python script.

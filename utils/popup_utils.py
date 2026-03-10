@@ -15,7 +15,7 @@
 
 import tkinter as tk
 from dataclasses import dataclass
-from tkinter import ttk, filedialog, messagebox
+from tkinter import ttk, filedialog
 from tkinter import font
 
 
@@ -123,10 +123,10 @@ def add_wrapped_args(parent,
             row_count -= 1 # accommodate for already having added one after last argument
 
         elif arg.input_opt == 'dropdown':
-            ttk.Combobox(parent, textvariable=arg.input_var, values=arg.opt_list).grid(column=0,
-                                                                                       row=row_count,
-                                                                                       sticky='WE',
-                                                                                       columnspan=3)
+            box = ttk.Combobox(parent, textvariable=arg.input_var, values=arg.opt_list)
+            box.grid(column=0, row=row_count, sticky='WE', columnspan=3)
+            box['state'] = 'readonly'
+
         elif arg.input_opt == 'spin':
             if not arg.opt_list:
                 spin = ttk.Spinbox(parent, textvariable=arg.input_var, from_=-10000, to=10000, increment=1)
@@ -157,7 +157,7 @@ def show_error(title, message):
     mainframe.columnconfigure(0, weight=1)
     mainframe.grid(column=0, row=0, sticky='NEWS')
     WrappedLabel(mainframe, True, text=message, justify='left').grid(column=0, row=0, sticky='WE')
-    ttk.Button(mainframe, text='OK', command=lambda: error_popup.destroy()).grid(column=0, row=1)
+    ttk.Button(mainframe, text='OK', command=error_popup.destroy).grid(column=0, row=1)
 
     error_popup.mainloop()
 
@@ -238,7 +238,7 @@ class TextInput(tk.Tk):
         WrappedLabel(mainframe, is_dynamic, textvariable=label_value, wrap_lth=wrap_lth,
                      justify='left').grid(column=0, row=0, sticky='WE')
         text_entry.grid(column=0, row=1, sticky='WE')
-        ttk.Button(mainframe, text='OK', command=lambda: self.destroy()).grid(column=0, row=2, sticky='E')
+        ttk.Button(mainframe, text='OK', command=self.destroy).grid(column=0, row=2, sticky='E')
 
         for child in mainframe.winfo_children():
             child.grid_configure(padx=5, pady=5)
@@ -267,7 +267,7 @@ class WrappedMessage(tk.Tk):
         mainframe.grid(column=0, row=0, sticky='NEWS')
         WrappedLabel(mainframe, is_dynamic, text=label_text, wrap_lth=wrap_length,
                      justify='left').grid(column=0, row=0, sticky='WE', columnspan=3)
-        ttk.Button(mainframe, text='OK', command=lambda: self.destroy()).grid(column=1, row=1)
+        ttk.Button(mainframe, text='OK', command=self.destroy).grid(column=1, row=1)
 
         for child in mainframe.winfo_children():
             child.grid_configure(padx=5, pady=5)
@@ -311,9 +311,9 @@ class RadioInput(tk.Tk):
         # add OK Cancel buttons
         ttk.Separator(mainframe, orient='horizontal').grid(column=0, row=rcount, sticky='WE', columnspan=2, pady=10)
         rcount += 1
-        ttk.Button(mainframe, text='Cancel', command=lambda: self.quit()).grid(column=0, row=rcount,
+        ttk.Button(mainframe, text='Cancel', command=self.quit).grid(column=0, row=rcount,
                                                                                        sticky='E')
-        ttk.Button(mainframe, text='OK', command=lambda: self.validate()).grid(column=1, row=rcount, sticky='W')
+        ttk.Button(mainframe, text='OK', command=self.validate).grid(column=1, row=rcount, sticky='W')
 
         for child in mainframe.winfo_children():
             child.grid_configure(padx=5, pady=5)
