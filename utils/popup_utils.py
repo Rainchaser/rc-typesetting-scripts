@@ -123,9 +123,8 @@ def add_wrapped_args(parent,
             row_count -= 1 # accommodate for already having added one after last argument
 
         elif arg.input_opt == 'dropdown':
-            box = ttk.Combobox(parent, textvariable=arg.input_var, values=arg.opt_list)
-            box.grid(column=0, row=row_count, sticky='WE', columnspan=3)
-            box['state'] = 'readonly'
+            ttk.Combobox(parent, textvariable=arg.input_var, values=arg.opt_list,
+                               state='readonly').grid(column=0, row=row_count, sticky='WE', columnspan=3)
 
         elif arg.input_opt == 'spin':
             if not arg.opt_list:
