@@ -15,7 +15,8 @@
 from utils import popup_utils
 from utils.popup_utils import TextInput, WrappedMessage
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, filedialog
+
 
 # Example simple dropdown popup - using grid method.
 # Sticky option is which side(s) of the grid cell an item should stick to (using compass directions)
@@ -31,13 +32,12 @@ def dropdown_example(title_val, label_val, options_list):
     # add the label - it isn't referenced by later code so no need to assign to a variable
     ttk.Label(frame, text=label_val).grid(column=0, row=0, sticky='WE')
 
-    # add dropdown widget - setting it as readonly so have to assign to a variable.
+    # add variable to store selected value
     dropdown_value = tk.StringVar(frame)
     # set the initial value of the combobox - omit if the dropdown should start with no value set
     dropdown_value.set(options_list[0])
-    box = ttk.Combobox(frame, textvariable=dropdown_value, values=options_list)
-    box.grid(column=0, row=1, sticky='WE')
-    box['state'] = 'readonly'
+    # create the dropdown widget
+    ttk.Combobox(frame, textvariable=dropdown_value, values=options_list, state='readonly').grid(column=0, row=1, sticky='WE')
 
     # add a separator and an OK button
     ttk.Separator(frame, orient='horizontal').grid(column=0, row=2, sticky='WE', pady=5)
@@ -48,11 +48,189 @@ def dropdown_example(title_val, label_val, options_list):
     # once the window is closed, return the selected value
     return dropdown_value.get()
 
-# Example dropdown popup
-day_list = ('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun')
-text = dropdown_example('Test Dropdown Window', 'Select a day:', day_list)
 
+# Example simple listbox popup - using grid method.
+def listbox_example(title_val, label_val, options_list):
+    # create the nested function to set the value when an item is selected
+    def set_value(*args):
+        if len(listbox.curselection()) == 1:
+            pos = int(listbox.curselection()[0])
+            listbox_value.set(options_list[pos])
+
+    # create the base window
+    root = tk.Tk()
+    root.title = title_val
+
+    # add a frame to let the popup match the base OS styling
+    frame = ttk.Frame(root)
+    frame.grid(column=0, row=0, padx=5, pady=5, sticky='NEWS')
+
+    # add the label - it isn't referenced by later code so no need to assign to a variable
+    ttk.Label(frame, text=label_val).grid(column=0, row=0, sticky='WE')
+
+    # add variables to store the options list and the selected value.
+    listbox_options = tk.StringVar(frame, options_list)
+    listbox_value = tk.StringVar(frame)
+
+    # add the listbox - need to assign to a variable to allow binding the selection event
+    listbox = tk.Listbox(frame, listvariable=listbox_options)
+    listbox.grid(column=0, row=1, sticky='WE')
+
+    # bind the selection event to the nested function
+    listbox.bind('<<ListboxSelect>>', set_value)
+
+    # add a separator and an OK button
+    ttk.Separator(frame, orient='horizontal').grid(column=0, row=2, sticky='WE', pady=5)
+    ttk.Button(frame, text='OK', command=root.destroy).grid(column=0, row=3, sticky='WE')
+
+    # display the window
+    root.mainloop()
+
+    # once the window is closed, return the selected value
+    return listbox_value.get()
+
+
+# Example simple radio popup - using grid method.
+def radio_example(title_val, label_val, options_list):
+    # create the base window
+    root = tk.Tk()
+    root.title = title_val
+
+    # add a frame to let the popup match the base OS styling
+    frame = ttk.Frame(root)
+    frame.grid(column=0, row=0, padx=5, pady=5, sticky='NEWS')
+
+    # add the label - it isn't referenced by later code so no need to assign to a variable
+    ttk.Label(frame, text=label_val).grid(column=0, row=0, sticky='WE')
+
+    # set up a variable for the output
+    radio_value = tk.StringVar()
+
+    # add a radio button for each option in the options list - use a variable for the row number as don't know the
+    # number of options.
+    row_count = 1
+    for opt in options_list:
+        ttk.Radiobutton(frame, text=opt, variable=radio_value,
+                        value=opt).grid(column=0, row=row_count, sticky='WE')
+        row_count += 1
+
+    # add a separator and an OK button
+    ttk.Separator(frame, orient='horizontal').grid(column=0, row=row_count, sticky='WE', pady=5)
+    ttk.Button(frame, text='OK', command=root.destroy).grid(column=0, row=row_count+1, sticky='WE')
+
+    # display the window
+    root.mainloop()
+    # once the window is closed, return the selected value
+    return radio_value.get()
+
+
+# Example simple spinbox popup - using grid method.
+def spinbox_example(title_val, label_val, options_list):
+    # create the base window
+    root = tk.Tk()
+    root.title = title_val
+
+    # add a frame to let the popup match the base OS styling
+    frame = ttk.Frame(root)
+    frame.grid(column=0, row=0, padx=5, pady=5, sticky='NEWS')
+
+    # add an example number spinbox
+    new_value = tk.IntVar()
+    ttk.Label(frame, text='This is a demo box to show getting a number between 10 and '
+                          '-10. The value is not returned by the function').grid(column=0, row=0, sticky='WE')
+    ttk.Spinbox(frame, textvariable=new_value, from_=-10, to=10,
+                wrap=True, state='readonly').grid(column=0, row=1, sticky='WE')
+    ttk.Separator(frame, orient='horizontal').grid(column=0, row=2, sticky='WE', pady=5)
+
+    # add the label - it isn't referenced by later code so no need to assign to a variable
+    ttk.Label(frame, text=label_val).grid(column=0, row=3, sticky='WE')
+
+    # create the variable to store the selected value.
+    spinbox_value = tk.StringVar(frame)
+    # set the initial value of the spinbox - omit if the spinbox should start with no value set
+    spinbox_value.set(options_list[0])
+    # create the spinbox widget - set wrap=True to move from the lowest to highest value. Defaults to False
+    ttk.Spinbox(frame, textvariable=spinbox_value, values=options_list,
+                wrap=True, state='readonly').grid(column=0, row=4, sticky='WE')
+
+    # add a separator and an OK button
+    ttk.Separator(frame, orient='horizontal').grid(column=0, row=5, sticky='WE', pady=5)
+    ttk.Button(frame, text='OK', command=root.destroy).grid(column=0, row=6, sticky='WE')
+
+    # display the window
+    root.mainloop()
+    # once the window is closed, return the selected value
+    return spinbox_value.get()
+
+# Example simple listbox popup - using grid method.
+def file_dialog_example(title_val, label_val):
+    # create the base window
+    root = tk.Tk()
+    root.title = title_val
+
+    # add a frame to let the popup match the base OS styling
+    frame = ttk.Frame(root)
+    frame.grid(column=0, row=0, padx=5, pady=5, sticky='NEWS')
+
+    # add the label - it isn't referenced by later code so no need to assign to a variable
+    ttk.Label(frame, text=label_val).grid(column=0, row=0, sticky='WE')
+
+    # add variable to store the chosen file and directory paths
+    file_value = tk.StringVar(frame)
+    dir_value = tk.StringVar(frame)
+
+    # add an Entry to store the value for the file
+    ttk.Entry(frame, textvariable=file_value).grid(column=0, row=1, sticky='WE')
+    # add a button to bind the file selection dialog to - this example will filter to html and txt files only
+    ttk.Button(frame, text='Select File',
+               command=lambda: file_value.set(filedialog.askopenfilename(initialdir=".",
+                                              title="Select file to process",
+                                              filetypes=([("HTML", "*.html"), ("TEXT", "*.txt")])))
+               ).grid(column=1, row=1, sticky='WE')
+    # add an Entry to store the value for the directory
+    ttk.Entry(frame, textvariable=dir_value).grid(column=0, row=2, sticky='WE')
+    ttk.Button(frame, text='Select Directory',
+               command=lambda: dir_value.set(
+                   filedialog.askdirectory(initialdir=".", title="Select output directory"))
+               ).grid(column=1, row=2, sticky='WE')
+
+
+    # add a separator and an OK button
+    ttk.Separator(frame, orient='horizontal').grid(column=0, row=3, sticky='WE', pady=5)
+    ttk.Button(frame, text='OK', command=root.destroy).grid(column=0, row=4, sticky='WE')
+
+    # display the window
+    root.mainloop()
+    # once the window is closed, return the selected value
+    return file_value.get(), dir_value.get()
+
+
+# Usage examples:
+
+# Example dropdown popup
+day_list = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+text = dropdown_example('Test Dropdown Window', 'Select a day:', day_list)
 WrappedMessage("Response", "Answer: " + text)
+
+# Example listbox popup
+day_list = ('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun')
+text = listbox_example('Test Listbox Window', 'Select a day:', day_list)
+WrappedMessage("Response", "Answer: " + text)
+
+# Example radio popup
+day_list = ('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun')
+text = radio_example('Test Radio Window', 'Select a day:', day_list)
+WrappedMessage("Response", "Answer: " + text)
+
+# Example spinbox popup
+day_list = ('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun')
+text = spinbox_example('Test Spinbox Window', 'Select a day:', day_list)
+WrappedMessage("Response", "Answer: " + text)
+
+# Example file and dir selection popup
+day_list = ('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun')
+file_text, dir_text = file_dialog_example('Test File Window', 'Select a file and directory:')
+WrappedMessage("Response", "Answer: " + file_text + " " + dir_text, wrap_length=500)
 
 
 # Example input and message boxes with wrapped text.
