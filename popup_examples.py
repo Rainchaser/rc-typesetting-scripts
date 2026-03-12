@@ -52,7 +52,7 @@ def dropdown_example(title_val, label_val, options_list):
 # Example simple listbox popup - using grid method.
 def listbox_example(title_val, label_val, options_list):
     # create the nested function to set the value when an item is selected
-    def set_value(*args):
+    def set_value(event):
         if len(listbox.curselection()) == 1:
             pos = int(listbox.curselection()[0])
             listbox_value.set(options_list[pos])
@@ -181,7 +181,7 @@ def file_dialog_example(title_val, label_val):
 
     # add an Entry to store the value for the file
     ttk.Entry(frame, textvariable=file_value).grid(column=0, row=1, sticky='WE')
-    # add a button to bind the file selection dialog to - this example will filter to html and txt files only
+    # add a button to bind the file selection dialog to - this example will filter to HTML and txt files only
     ttk.Button(frame, text='Select File',
                command=lambda: file_value.set(filedialog.askopenfilename(initialdir=".",
                                               title="Select file to process",
@@ -206,31 +206,32 @@ def file_dialog_example(title_val, label_val):
 
 
 # Usage examples:
-
+label_text = 'Select a day:'
+answer_prefix = "Answer: "
 # Example dropdown popup
 day_list = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-text = dropdown_example('Test Dropdown Window', 'Select a day:', day_list)
-WrappedMessage("Response", "Answer: " + text)
+text = dropdown_example('Test Dropdown Window', label_text, day_list)
+WrappedMessage("Response", answer_prefix + text)
 
 # Example listbox popup
 day_list = ('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun')
-text = listbox_example('Test Listbox Window', 'Select a day:', day_list)
-WrappedMessage("Response", "Answer: " + text)
+text = listbox_example('Test Listbox Window', label_text, day_list)
+WrappedMessage("Response", answer_prefix + text)
 
 # Example radio popup
 day_list = ('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun')
-text = radio_example('Test Radio Window', 'Select a day:', day_list)
-WrappedMessage("Response", "Answer: " + text)
+text = radio_example('Test Radio Window', label_text, day_list)
+WrappedMessage("Response", answer_prefix + text)
 
 # Example spinbox popup
 day_list = ('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun')
-text = spinbox_example('Test Spinbox Window', 'Select a day:', day_list)
-WrappedMessage("Response", "Answer: " + text)
+text = spinbox_example('Test Spinbox Window', label_text, day_list)
+WrappedMessage("Response", answer_prefix + text)
 
 # Example file and dir selection popup
 day_list = ('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun')
 file_text, dir_text = file_dialog_example('Test File Window', 'Select a file and directory:')
-WrappedMessage("Response", "Answer: " + file_text + " " + dir_text, wrap_length=500)
+WrappedMessage("Response", answer_prefix + file_text + " " + dir_text, wrap_length=500)
 
 
 # Example input and message boxes with wrapped text.
@@ -270,6 +271,7 @@ popup_utils.WrappedLabel(inner_frame, is_dynamic=True,
                          text=text_arg + text_arg + text_arg + text_arg + text_arg).grid(column=0, row=4, sticky='WE')
 ttk.Separator(inner_frame, orient='horizontal').grid(column=0, row=5, sticky='WE', pady=10)
 ttk.Button(inner_frame, text='OK', command=window.destroy).grid(column=0, row=6, sticky='W')
+
 window.mainloop()
 
 # For examples of using the RadioInput, ScriptArgument and ScriptPopup classes, see the "script_launcher" python script.
