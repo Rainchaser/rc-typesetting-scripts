@@ -116,7 +116,7 @@ def process_split_option(text_opt, chapter, use_between, between_tag):
     if text_opt == 'split':
         title_text = get_title_from_chapter(chapter.text)
         if title_text is not None and title_text != '':
-            title_tag = html_utils.new_html_element(Tag.H2, title_text)
+            title_tag = html_utils.new_html_element(Tag.H2.value, title_text)
             last_tag = title_tag
             if use_between:
                 new_tag = deepcopy(between_tag)
@@ -144,8 +144,8 @@ def main(options, work_file):
         suffix = ': '
 
     # set up ornaments - will need to append copies of the tags in the tree
-    use_after, after_tag = set_ornament(options['after'], Tag.H6)
-    use_between, between_tag = set_ornament(options['between'], Tag.H1)
+    use_after, after_tag = set_ornament(options['after'], Tag.H6.value)
+    use_between, between_tag = set_ornament(options['between'], Tag.H1.value)
 
     # configure starting chapter info - if text option isn't title only
     chap_num, chapters_skip = set_chap_numbers(options['text'], options['offset'])

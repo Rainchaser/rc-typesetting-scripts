@@ -26,10 +26,10 @@ test_fix_values = [
 ]
 
 test_ornament_values = [
-    ('~#~', Tag.H1, True),
-    ('**', Tag.H6, True),
-    ('', Tag.H1, False),
-    (None, Tag.H1, False)
+    ('~#~', Tag.H1.value, True),
+    ('**', Tag.H6.value, True),
+    ('', Tag.H1.value, False),
+    (None, Tag.H1.value, False)
 ]
 
 test_cnum_values = [

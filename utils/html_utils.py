@@ -35,6 +35,7 @@ def get_parsed_root(html_file):
     logger.debug(file_utils.format_message("parse html", "file parsed successfully"))
     return parsed_html.getroot()
 
+
 def get_html_string(html_tree):
     """
     Convert HTML tree to utf-8 formatted string.
@@ -45,6 +46,7 @@ def get_html_string(html_tree):
     logger.debug(file_utils.format_message("convert html to string", "file serialised"))
     return html_string
 
+
 def new_html_base(content_type):
     return HTML(
         HEAD( TITLE(content_type)),
@@ -53,26 +55,31 @@ def new_html_base(content_type):
         ),
     )
 
+
 def new_html_element(tag, text):
     element = HtmlElement()
     element.tag = tag
     element.text = text
     return element
 
+
 def drop_all_of_tag(html_element: html.HtmlElement, tag_string):
     html_tags = html_element.findall(tag_string)
     for item in html_tags:
         item.drop_tag()
+
 
 def deltree_all_of_tag(html_element: html.HtmlElement, tag_string):
     html_tags = html_element.findall(tag_string)
     for tag in html_tags:
         tag.drop_tree()
 
+
 def update_tag_type(html_element: html.HtmlElement, search_str, tag_type):
     tags = html_element.findall(search_str)
     for tag in tags:
         tag.tag = tag_type
+
 
 def convert_punctuation(html_element: html.HtmlElement, punct: Punctuation):
     new_text = punct.get_canonical_value()
@@ -84,10 +91,12 @@ def convert_punctuation(html_element: html.HtmlElement, punct: Punctuation):
             text = text_replace(text, alias, new_text)
         element.text = text
 
+
 def get_chapter_titles(html_root: HtmlElement):
-    return html_root.xpath(make_xpath([XpathPart.ALL_FROM_ROOT,
-                                       Tag.DIV + XpathPart.item_with_val(XpathPart.ID.name, Attr.CHAPTERS),
-                                       Tag.H2]))
+    return html_root.xpath(make_xpath([XpathPart.ALL_FROM_ROOT.value,
+                                       Tag.DIV.value + XpathPart.item_with_val(XpathPart.ID.name, Attr.CHAPTERS.value),
+                                       Tag.H2.value]))
+
 
 def make_xpath(arg_list):
-    return XpathPart.PATH_SEPARATOR.join(arg_list)
+    return XpathPart.PATH_SEPARATOR.value.join(arg_list)

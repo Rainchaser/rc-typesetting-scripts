@@ -16,10 +16,11 @@
 import unittest
 from utils import Punctuation, Tag, XpathPart, Attr, get_arg_parser
 
+# short code: (long code, type, default, options, description, popup input (if using script launcher)
 OPTIONS_DICT = {
-    '-n' : ('--numbers', str, 'text', 'test help string split '
-                                      'over two lines'),
-    '-o' : ('--offset', int, 0, 'test int help string')
+    '-n' : ('--numbers', str, 'text', None, 'test help string split '
+                                      'over two lines', 'free'),
+    '-o' : ('--offset', int, 0, None, 'test int help string', 'free')
     }
 
 class TestUtils(unittest.TestCase):

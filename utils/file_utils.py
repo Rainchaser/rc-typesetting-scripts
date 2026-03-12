@@ -46,7 +46,7 @@ def setup_config(parent):
     if not os.path.exists(folder):
         os.makedirs(folder)
 
-    logging.basicConfig(filename=os.path.join(folder, timestamp + ".log"), encoding='utf-8', level=logging.DEBUG)
+    logging.basicConfig(filename=os.path.join(folder, timestamp + ".log"), level=logging.DEBUG)
 
     return folder
 

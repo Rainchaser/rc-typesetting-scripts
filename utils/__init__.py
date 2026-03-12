@@ -19,7 +19,7 @@ The utility modules for the typesetting scripts
 __all__ = ['file_utils', 'html_utils', 'number_utils', 'Tag', 'Punctuation', 'XpathPart', 'Attr', 'get_arg_parser']
 
 import argparse
-from enum import Enum, StrEnum
+from enum import Enum
 
 from utils.string_utils import text_replace
 
@@ -38,7 +38,7 @@ def get_arg_parser(opts_list: dict):
 '''
 An enum class containing values for specific attribute-related values (mainly used by AO3).
 '''
-class Attr(StrEnum):
+class Attr(Enum):
     # types of attribute
     ID = 'id'
     CLASS = 'class'
@@ -59,7 +59,7 @@ class Attr(StrEnum):
 An enum class containing values for specific html tags, plus a method to retrieve the string to use with find or
 findall to retrieve any occurrence of that tag.
 '''
-class Tag(StrEnum):
+class Tag(Enum):
     DROP = 'drop' # set by script to id items to delete
     ANY = '*'
     HTML = 'html'
@@ -93,7 +93,7 @@ class Tag(StrEnum):
 An enum class containing values for specific html tags, plus a method to retrieve the string to use with find or
 findall to retrieve any occurrence of that tag.
 '''
-class XpathPart(StrEnum):
+class XpathPart(Enum):
     ALL_REL_TO_NODE = './' # only one / as join will add an extra one
     ALL_FROM_ROOT = '/' # only one / as join will add an extra one
     SINGLE_PATH_FROM_ROOT = '' # no / as join will add an extra one

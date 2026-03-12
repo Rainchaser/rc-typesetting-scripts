@@ -24,6 +24,7 @@ from utils.html_utils import make_xpath, new_html_element
 
 logger = logging.getLogger(__name__)
 
+# short code: (long code, type, default, options, description, popup input (if using script launcher)
 OPTIONS_DICT = {
     '-d' : ('--dash_style', str, '', ['','UK', 'US'], 'Dash style is one of "UK" or "US". If left blank then '
                                                          'dash style will not be updated.', 'dropdown')
@@ -31,14 +32,14 @@ OPTIONS_DICT = {
 
 def move_tags(html_root, tags_root):
     # get the initial message of "originally posted on..."
-    element = new_html_element(Tag.DIV, None)
-    element.append(html_root.xpath(make_xpath([XpathPart.ALL_FROM_ROOT,
-                                               Tag.PARAGRAPH + XpathPart.item_with_val(XpathPart.CLASS.name,
-                                                                                       Attr.MESSAGE)
+    element = new_html_element(Tag.DIV.value, None)
+    element.append(html_root.xpath(make_xpath([XpathPart.ALL_FROM_ROOT.value,
+                                               Tag.PARAGRAPH.value + XpathPart.item_with_val(XpathPart.CLASS.name,
+                                                                                       Attr.MESSAGE.value)
                                                ]))[0])
     # Get the list of tags
-    tags = html_root.xpath(make_xpath([XpathPart.ALL_FROM_ROOT,
-                                       Tag.DL + XpathPart.item_with_val(XpathPart.CLASS.name, Attr.TAGS)]))
+    tags = html_root.xpath(make_xpath([XpathPart.ALL_FROM_ROOT.value,
+                                       Tag.DL.value + XpathPart.item_with_val(XpathPart.CLASS.name, Attr.TAGS.value)]))
     body_element = tags_root.find(Tag.BODY.get_find_str())
     body_element.append(element)
     body_element.append(tags[0])
@@ -47,46 +48,46 @@ def move_tags(html_root, tags_root):
 def move_notes(html_root, notes_root):
     body_element = notes_root.find(Tag.BODY.get_find_str())
     # move title/author in root
-    pre_div = html_root.xpath(make_xpath([XpathPart.ALL_FROM_ROOT,
-                                          Tag.DIV + XpathPart.item_with_val(XpathPart.ID.name, Attr.PREFACE)]))[0]
+    pre_div = html_root.xpath(make_xpath([XpathPart.ALL_FROM_ROOT.value,
+                                          Tag.DIV.value + XpathPart.item_with_val(XpathPart.ID.name, Attr.PREFACE.value)]))[0]
     pre_div.find(Tag.H2.get_find_str()).drop_tree()
-    pre_div.append(pre_div.xpath(make_xpath([XpathPart.ALL_FROM_ROOT,
-                                             Tag.DIV + XpathPart.item_with_val(XpathPart.CLASS.name, Attr.META),
-                                             Tag.H1
+    pre_div.append(pre_div.xpath(make_xpath([XpathPart.ALL_FROM_ROOT.value,
+                                             Tag.DIV.value + XpathPart.item_with_val(XpathPart.CLASS.name, Attr.META.value),
+                                             Tag.H1.value
                                              ]))[0])
-    pre_div.append(pre_div.xpath(make_xpath([XpathPart.ALL_FROM_ROOT,
-                                             Tag.DIV + XpathPart.item_with_val(XpathPart.CLASS.name, Attr.META),
-                                             Tag.DIV + XpathPart.item_with_val(XpathPart.CLASS.name, Attr.BYLINE)
+    pre_div.append(pre_div.xpath(make_xpath([XpathPart.ALL_FROM_ROOT.value,
+                                             Tag.DIV.value + XpathPart.item_with_val(XpathPart.CLASS.name, Attr.META.value),
+                                             Tag.DIV.value + XpathPart.item_with_val(XpathPart.CLASS.name, Attr.BYLINE.value)
                                              ]))[0])
 
     # move summary and work notes
-    body_element.append(pre_div.xpath(make_xpath([XpathPart.ALL_FROM_ROOT,
-                                                  Tag.DIV + XpathPart.item_with_val(XpathPart.CLASS.name, Attr.META)
+    body_element.append(pre_div.xpath(make_xpath([XpathPart.ALL_FROM_ROOT.value,
+                                                  Tag.DIV.value + XpathPart.item_with_val(XpathPart.CLASS.name, Attr.META.value)
                                                   ]))[0])
 
     # move chapter start / end notes
-    group1 = make_xpath([XpathPart.ALL_FROM_ROOT,
-                         Tag.DIV + XpathPart.item_with_val(XpathPart.ID.name, Attr.CHAPTERS),
-                         Tag.DIV + XpathPart.item_with_val(XpathPart.CLASS.name, Attr.META_GRP)])
-    group2 = make_xpath([XpathPart.ALL_FROM_ROOT,
-                         Tag.DIV + XpathPart.item_with_val(XpathPart.ID.name, Attr.CHAPTERS),
-                         Tag.DIV + XpathPart.item_with_val(XpathPart.CLASS.name, Attr.META)])
-    meta_groups = html_root.xpath(group1 + XpathPart.GROUP_SEPARATOR + group2)
+    group1 = make_xpath([XpathPart.ALL_FROM_ROOT.value,
+                         Tag.DIV.value + XpathPart.item_with_val(XpathPart.ID.name, Attr.CHAPTERS.value),
+                         Tag.DIV.value + XpathPart.item_with_val(XpathPart.CLASS.name, Attr.META_GRP.value)])
+    group2 = make_xpath([XpathPart.ALL_FROM_ROOT.value,
+                         Tag.DIV.value + XpathPart.item_with_val(XpathPart.ID.name, Attr.CHAPTERS.value),
+                         Tag.DIV.value + XpathPart.item_with_val(XpathPart.CLASS.name, Attr.META.value)])
+    meta_groups = html_root.xpath(group1 + XpathPart.GROUP_SEPARATOR.value + group2)
     for group in meta_groups:
-        if group.get(Attr.CLASS) == Attr.META_GRP:
+        if group.get(Attr.CLASS.value) == Attr.META_GRP.value:
             text_div = group.getnext()
-            headings = group.xpath(make_xpath([XpathPart.ALL_FROM_ROOT,
-                                               Tag.H2 + XpathPart.item_with_val(XpathPart.CLASS.name, Attr.HEADING)]))
+            headings = group.xpath(make_xpath([XpathPart.ALL_FROM_ROOT.value,
+                                               Tag.H2.value + XpathPart.item_with_val(XpathPart.CLASS.name, Attr.HEADING.value)]))
             if len(headings) > 0:
-                element = new_html_element(Tag.H2, headings[0].text)
+                element = new_html_element(Tag.H2.value, headings[0].text)
                 text_div.addprevious(element)
             body_element.append(group)
         else:
             body_element.append(group)
 
     # move afterword
-    afterword = html_root.xpath(make_xpath([XpathPart.ALL_FROM_ROOT,
-                                            Tag.DIV + XpathPart.item_with_val(XpathPart.ID.name, Attr.AFTERWORD)]))
+    afterword = html_root.xpath(make_xpath([XpathPart.ALL_FROM_ROOT.value,
+                                            Tag.DIV.value + XpathPart.item_with_val(XpathPart.ID.name, Attr.AFTERWORD.value)]))
     for note in afterword:
         body_element.append(note)
 
@@ -101,15 +102,15 @@ def main(html_file, work_file, tags_file, notes_file, dash_style_opt):
     html_root = html_utils.get_parsed_root(html_file)
 
     # remove meta title and style
-    html_utils.deltree_all_of_tag(html_root, make_xpath([XpathPart.SINGLE_REL_PATH, Tag.HEAD, Tag.TITLE]))
-    html_utils.deltree_all_of_tag(html_root, make_xpath([XpathPart.SINGLE_REL_PATH, Tag.HEAD, Tag.STYLE]))
+    html_utils.deltree_all_of_tag(html_root, make_xpath([XpathPart.SINGLE_REL_PATH.value, Tag.HEAD.value, Tag.TITLE.value]))
+    html_utils.deltree_all_of_tag(html_root, make_xpath([XpathPart.SINGLE_REL_PATH.value, Tag.HEAD.value, Tag.STYLE.value]))
 
     # remove html links
     html_utils.drop_all_of_tag(html_root, Tag.ANCHOR.get_find_str())
 
     # change bold and italics to consistent tag
-    html_utils.update_tag_type(html_root, Tag.BOLD.get_find_str(), Tag.STRONG)
-    html_utils.update_tag_type(html_root, Tag.ITALIC.get_find_str(), Tag.EMPHASIS)
+    html_utils.update_tag_type(html_root, Tag.BOLD.get_find_str(), Tag.STRONG.value)
+    html_utils.update_tag_type(html_root, Tag.ITALIC.get_find_str(), Tag.EMPHASIS.value)
 
     # convert ellipse and dash style to proper format
     html_utils.convert_punctuation(html_root, Punctuation.ELLIPSIS)
@@ -124,8 +125,8 @@ def main(html_file, work_file, tags_file, notes_file, dash_style_opt):
     move_notes(html_root, notes_root)
 
     # remove remaining TOC title heading if present (single-chapter fics only)
-    html_utils.deltree_all_of_tag(html_root, make_xpath([XpathPart.ALL_REL_TO_NODE,
-                                                         Tag.ANY + XpathPart.item_with_val(XpathPart.CLASS.name,
+    html_utils.deltree_all_of_tag(html_root, make_xpath([XpathPart.ALL_REL_TO_NODE.value,
+                                                         Tag.ANY.value + XpathPart.item_with_val(XpathPart.CLASS.name,
                                                                                            'toc-heading')
                                                          ]))
 
